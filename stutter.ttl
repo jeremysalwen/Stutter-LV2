@@ -54,8 +54,7 @@
     lv2:index 3;
     lv2:symbol "input" ;
     lv2:name "Input" ;
-    ],
-    a lv2:InputPort;
+    ], [a lv2:InputPort;
     a lv2:AudioPort;
     lv2:index 4;
     lv2:symbol "output";
