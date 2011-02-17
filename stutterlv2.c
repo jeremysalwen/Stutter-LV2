@@ -99,19 +99,30 @@ static void runStut(LV2_Handle instance, uint32_t sample_count)
 	}
 	const double stutterlength=beatlength/divisor;
 	
-	const float * const input = plugin_data->input;
-	float * const output = plugin_data->output;
+	const float * __restrict__ const input = plugin_data->input;
+	float * __restrict__ const output = plugin_data->output;
 
 	float coef=mix;
 	double phase=plugin_data->phase;
-	for (int pos = 0; pos < sample_count; pos++) {
-		if(phase>stutterlength) {
-			phase-=stutterlength;
-			coef=-(coef-mix);
+	unsigned int pos=0;
+	while(1) {
+		unsigned int rest=floor(stutterlength-phase)+1;
+		if(pos+rest>sample_count) {
+			break;
 		}
-		output[pos] = input[pos] * coef;
-		phase++;
+		for(unsigned int i=pos;i<pos+rest; i++) {
+			output[i] = input[i] * coef;
+		}
+		coef=mix-coef;
+		
+		pos+=rest;
+		phase+=rest-stutterlength;
 	}
+	
+	for(unsigned int i=pos; i<sample_count; i++) {
+		output[i] = input[i] * coef;
+	}
+	
 	plugin_data->phase=phase;
 }
 
