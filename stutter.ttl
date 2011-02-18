@@ -54,13 +54,10 @@
     lv2:index 3;
     lv2:symbol "input" ;
     lv2:name "Input" ;
-    ],
+    ], [
     a lv2:OutputPort;
     a lv2:AudioPort;
     lv2:index 4;
     lv2:symbol "output";
     lv2:name "Output";
-    lv2:default 50;
-    lv2:minimum 0;
-    lv2:maximum 127;
     ].
