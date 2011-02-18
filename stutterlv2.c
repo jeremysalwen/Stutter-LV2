@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-
+#include <stdio.h>
 #include <math.h>
 
 #include <lv2.h>
@@ -26,6 +26,7 @@ typedef struct {
 	float * input;
 	float * output;
 
+	float coef;
 	double phase;
 	double s_rate;
 } Stut;
@@ -66,6 +67,7 @@ static LV2_Handle instantiateStut(const LV2_Descriptor *descriptor,
 	Stut *plugin_data = (Stut*)malloc(sizeof(Stut));
 	plugin_data->s_rate=s_rate;
 	plugin_data->phase=0;
+	plugin_data->coef=0;
 	return (LV2_Handle)plugin_data;
 }
 
@@ -74,7 +76,7 @@ static void runStut(LV2_Handle instance, uint32_t sample_count)
 	Stut *plugin_data = (Stut *)instance;
 
 	const float mix = 1-*(plugin_data->mix);
-	const double bpm= *(plugin_data->mix);
+	const double bpm= *(plugin_data->bpm);
 	const unsigned int division=*(plugin_data->division);
 	const double beatlength=(plugin_data->s_rate*60)/bpm;
 	double divisor;
@@ -102,17 +104,25 @@ static void runStut(LV2_Handle instance, uint32_t sample_count)
 	const float * const input = plugin_data->input;
 	float * const output = plugin_data->output;
 
-	float coef=mix;
+	float coef=plugin_data->coef;
+	if(coef<1) {
+		coef=mix;
+	}
+	//To satisfy a*x+b=1 and a*1+b=x, we get a=-1, b=1+x
+	float twiddle=1+mix;
 	double phase=plugin_data->phase;
 	for (int pos = 0; pos < sample_count; pos++) {
+		//printf("phase %f %f %f\n",phase,coef,stutterlength);
 		if(phase>stutterlength) {
 			phase-=stutterlength;
-			coef=-(coef-mix);
+			coef=twiddle-coef;
 		}
-		output[pos] = input[pos] * coef;
+		//printf("%f\n",input[pos]);
+		output[pos] = input[pos]* coef;
 		phase++;
 	}
 	plugin_data->phase=phase;
+	plugin_data->coef=coef;
 }
 
 static LV2_Descriptor stutDescriptor = 
