@@ -101,8 +101,8 @@ static void runStut(LV2_Handle instance, uint32_t sample_count)
 	}
 	const double stutterlength=beatlength/divisor;
 	
-	const float * __restrict__ const input = plugin_data->input;
-	float * __restrict__ const output = plugin_data->output;
+	const float * const input = plugin_data->input;
+	float * const output = plugin_data->output;
 
 	float coef=plugin_data->coef;
 	if(coef<1) {
@@ -117,20 +117,25 @@ static void runStut(LV2_Handle instance, uint32_t sample_count)
 		if(pos+rest>sample_count) {
 			break;
 		}
-		for(unsigned int i=pos;i<pos+rest; i++) {
-			output[i] = input[i] * coef;
+		//Pulling out these variables to make GCC vectorize on x86_64
+		const float* inbuf=input+pos;
+		float* outbuf=output+pos;
+		for(unsigned int i=0;i<rest; i++) {
+			outbuf[i] = inbuf[i] * coef;
 		}
-		coef=mix-coef;
+		coef=twiddle-coef;
 		
 		pos+=rest;
 		phase+=rest-stutterlength;
 	}
-	
-	for(unsigned int i=pos; i<sample_count; i++) {
-		output[i] = input[i] * coef;
+
+	//To make GCC auto-vectorize
+	const float* inbuf=input+pos;
+	float* outbuf=output+pos;
+	for(unsigned int i=0; i<sample_count-pos; i++) {
+		outbuf[i] = inbuf[i] * coef;
 	}
-	
-	plugin_data->phase=phase;
+	plugin_data->phase=phase+(sample_count-pos);
 	plugin_data->coef=coef;
 }
 

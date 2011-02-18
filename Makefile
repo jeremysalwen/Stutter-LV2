@@ -1,4 +1,4 @@
-CFLAGS += -O3 -g -Wall -ftree-vectorizer-verbose=5  -msse2 -msse -msse3 -march=native -mtune=native --std=c99 `pkg-config --cflags --libs lv2core` -fPIC -ffast-math
+CFLAGS += -O3 -g -Wall -march=native -mtune=native --std=c99 `pkg-config --cflags --libs lv2core` -fPIC -ffast-math
 OBJECTS = stutterlv2.o
 LIBRARY = libstutterlv2.so
 
