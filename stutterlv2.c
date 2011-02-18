@@ -113,7 +113,7 @@ static void runStut(LV2_Handle instance, uint32_t sample_count)
 	double phase=plugin_data->phase;
 	unsigned int pos=0;
 	while(1) {
-		unsigned int rest=floor(stutterlength-phase)+1;
+		unsigned int rest=stutterlength+floor(-phase)+1;
 		if(pos+rest>sample_count) {
 			break;
 		}
