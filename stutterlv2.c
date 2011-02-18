@@ -111,7 +111,6 @@ static void runStut(LV2_Handle instance, uint32_t sample_count)
 	//To satisfy a*x+b=1 and a*1+b=x, we get a=-1, b=1+x
 	float twiddle=1+mix;
 	double phase=plugin_data->phase;
-<<<<<<< HEAD
 	unsigned int pos=0;
 	while(1) {
 		unsigned int rest=floor(stutterlength-phase)+1;
@@ -125,17 +124,6 @@ static void runStut(LV2_Handle instance, uint32_t sample_count)
 		
 		pos+=rest;
 		phase+=rest-stutterlength;
-=======
-	for (int pos = 0; pos < sample_count; pos++) {
-		//printf("phase %f %f %f\n",phase,coef,stutterlength);
-		if(phase>stutterlength) {
-			phase-=stutterlength;
-			coef=twiddle-coef;
-		}
-		//printf("%f\n",input[pos]);
-		output[pos] = input[pos]* coef;
-		phase++;
->>>>>>> master
 	}
 	
 	for(unsigned int i=pos; i<sample_count; i++) {
