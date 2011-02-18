@@ -22,7 +22,7 @@ count:
 clean:
 	rm -f $(LIBRARY) $(OBJECTS)
 
-install :
+install : all
 	mkdir -p $(INSTALLDIR)$(INSTALLNAME)
 	install $(LIBRARY) $(INSTALLDIR)$(INSTALLNAME)
 	install $(TTLS) $(INSTALLDIR)$(INSTALLNAME)
