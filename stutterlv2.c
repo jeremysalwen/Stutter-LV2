@@ -112,8 +112,12 @@ static void runStut(LV2_Handle instance, uint32_t sample_count)
 	float twiddle=1+mix;
 	double phase=plugin_data->phase;
 	unsigned int pos=0;
+	while(phase>=stutterlength) {
+		phase-=stutterlength;
+		coef=twiddle-coef;
+	}
 	while(1) {
-		unsigned int rest=stutterlength+floor(-phase)+1;
+		unsigned int rest=stutterlength+ceil(-phase);
 		if(pos+rest>sample_count) {
 			break;
 		}
