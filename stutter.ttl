@@ -4,6 +4,11 @@
 <urn:jeremy.salwen:plugins:stutter> a lv2:Plugin ;
     doap:name "Simple Stutter" ;
     doap:license <http://usefulinc.com/doap/licenses/gpl> ;
+    doap:maintainer [
+        foaf:name "Jeremy Salwen";
+        foaf:mbox <mailto:jeremysalwen@gmail.com> ;
+    ] ;
+
 	lv2:optionalFeature lv2:hardRtCapable;
 	
     lv2:port [
