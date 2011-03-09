@@ -1,0 +1,15 @@
+This is a simple plugin for creating a "stuttering" effect for your audio.
+
+It is in the LV2 format, which means you need a program supporting LV2 
+plugins to use this. Some examples are: Ardour, Ingen, QTraktor, 
+Traverso, and lv2_jack_host.
+
+In order to build this plugin, you will need the core LV2 bundle 
+installed (commonly called lv2-core), and then go to this directory in a 
+terminal and run "make" and then "sudo make install" to install it.  If 
+you are using a debian based system, I would suggest using checkinstall 
+instead to install it, by running "sudo checkinstall" from this 
+directory.
+
+Once installed, the plugin should be automatically detected by your 
+chosen plugin host.
